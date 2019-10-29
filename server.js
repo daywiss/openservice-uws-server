@@ -51,14 +51,10 @@ module.exports = async (config,{actions},emit=x=>x) => {
     },
   }).any('/*',(res,req)=>{
     res.writeHeader('Access-Control-Allow-Origin', '*')
-    res.writeHeader('Content-Type', 'application/json')
-    console.log('any')
     res.end('ok')
   }).get('/*', (res, req) => {
     /* Wildcards - make sure to catch them last */
     res.writeHeader('Access-Control-Allow-Origin', '*')
-    res.writeHeader('Content-Type', 'application/json')
-    console.log('get')
     res.end('ok')
   })
 
