@@ -264,9 +264,9 @@ through@~2.3.4, through@~2.3.8:
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
 
-uWebSockets.js@uNetworking/uWebSockets.js#v16.0.0:
-  version "16.0.0"
-  resolved "https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/279ddafb1f95c81b4befece127a320c1e3dfcd4a"
+uWebSockets.js@uNetworking/uWebSockets.js#v16.1.0:
+  version "16.1.0"
+  resolved "https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/b49dfbaefa34118b954c82823fe0a23927cf4d3b"
 
 util-deprecate@^1.0.2:
   version "1.0.2"
