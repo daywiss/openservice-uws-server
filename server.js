@@ -50,6 +50,11 @@ module.exports = async (config,{actions},emit=x=>x) => {
       emit('disconnect',ws.id)
     },
   }).any('/*',(res,req)=>{
+    res.writeHeader('Access-Control-Allow-Origin', '*')
+    res.end('ok')
+  }).get('/*', (res, req) => {
+    /* Wildcards - make sure to catch them last */
+    res.writeHeader('Access-Control-Allow-Origin', '*')
     res.end('ok')
   })
 
