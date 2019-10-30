@@ -61,9 +61,11 @@ module.exports = async (config,{actions},emit=x=>x) => {
   await new Promise((res,rej)=>{
     app.listen(host,port,x=>{
       if(x) return res(x)
-      rej(new Error('Unable to listen on port ' + + host +':'+ port))
+      rej(new Error('Unable to listen on port ' + host +':'+ port))
     })
   })
+
+  console.log('openservice-ws open',host+':'+port)
 
   function unsubscribe(channel,sessionid,topic){
     assert(channels.has(channel),'No channel: ' + channel)
