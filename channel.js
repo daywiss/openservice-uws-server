@@ -28,7 +28,8 @@ module.exports = (config, {actions,sessions}) => {
     }
 
     function publish(topic,args=[]){
-      assert(sessions.size,'cannot publish when no sockets are connected')
+      if(sessions.size <= 0) return
+      // assert(sessions.size,'cannot publish when no sockets are connected')
       sessions.values().next().value.publish(topic,encodeEvent(channel,args))
     }
 

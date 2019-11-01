@@ -11,11 +11,13 @@ module.exports = (config={},emit=x=>x) =>{
     stream
     // .doto(args=>console.log(...args))
       .batchWithTimeOrCount(batchTime,batchLength)
+      .map(data=>emit(id,data))
       .errors((err,push)=>{
         console.log(err)
         process.exit(1)
       })
-      .each(data=>emit(id,data))
+      .resume()
+
     return stream
   }
 
