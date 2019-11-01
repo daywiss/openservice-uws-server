@@ -35,8 +35,9 @@ module.exports = async (config,{actions},emit=x=>x) => {
     },
     message(ws,data,isBinary){
       try{
+        if(data.byteLength === 0) return
         const [channel,...message] = decode(data)
-        if(!channels.has(channel)) return
+        assert(channels.has(channel),'Bad Server Channel: ' + channel)
         channels.get(channel).call(ws,message)
       }catch(err){
         emit('error',err)
