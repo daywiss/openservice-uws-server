@@ -44,10 +44,10 @@ module.exports = async (config,{actions},emit=x=>x) => {
       }
     },
     close(ws,code,message){
+      sessions.delete(ws.id)
       channels.forEach(channel=>{
         channel.deleteStream(ws.id)
       })
-      sessions.delete(ws.id)
       emit('disconnect',ws.id)
     },
   }).any('/*',(res,req)=>{
