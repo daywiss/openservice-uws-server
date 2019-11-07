@@ -21,7 +21,7 @@ module.exports = async (config,{actions},emit=x=>x) => {
   assert(config.channels && config.channels.length,'requires at least one channel')
 
   const channels = config.channels.reduce((result,channel)=>{
-    result.set(channel,Channel(config,{actions,sessions})(channel))
+    result.set(channel,Channel(config,{actions,sessions,app})(channel))
     return result
   },new Map())
 
