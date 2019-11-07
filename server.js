@@ -7,7 +7,7 @@ const {decode} = require('./utils')
 module.exports = async (config,{actions},emit=x=>x) => {
   const {
     port,
-    host='localhost',
+    host='*',
     batchLength=500,
     batchTime=500,
     maxPayloadLength=32 * 1024 * 1024,
