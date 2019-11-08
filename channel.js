@@ -24,10 +24,10 @@ module.exports = (config, {actions,sessions,app}) => {
       //session existing, same on return data
       return actions(ws.id,channel,action,args).then(result=>{
         if(!sessions.has(ws.id)) return
-        ws.send(encodeResponse(channel,id,result))
+        return ws.send(encodeResponse(channel,id,result))
       }).catch(err=>{
         if(!sessions.has(ws.id)) return
-        ws.send(encodeError(channel,id,err))
+        return ws.send(encodeError(channel,id,err))
       })
     }
 
