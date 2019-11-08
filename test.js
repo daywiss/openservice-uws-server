@@ -12,10 +12,15 @@ test('server',t=>{
   const events = new Events()
   const port = 8832
 
-  async function ChannelAction(session,action,...args){
-    // console.log('action call',{session,action,args})
+  async function ChannelAction(session,channel,action,...args){
+    console.log('action call',{session,action,args})
     if(action === 'error'){
       throw new Error('this error')
+    }
+    if(action === 'slow'){
+      await new Promise(res=>setTimeout(res,500))
+      console.log('returning slow')
+      return true
     }
     return {session,action,args}
   }
@@ -26,7 +31,9 @@ test('server',t=>{
   }
 
   t.test('init',async t=>{
-    server = await Server(config,{actions:ChannelAction}).catch(t.end)
+    server = await Server(config,{actions:ChannelAction},(type,...args)=>{
+      console.log(type,...args)
+    }).catch(t.end)
 
     client = await Client(
       WS,
@@ -96,6 +103,19 @@ test('server',t=>{
     })
     await server.subscribe('admin',socketid,'someuser')
     server.stream('admin','someuser',[['test'],'test'])
+
+  })
+  t.test('stream and disconnect',async t=>{
+    client.public.call('slow').then(x=>{
+      t.ok(x)
+    })
+    client.getWs().close()
+    // await new Promise(res=>setTimeout(res,100))
+
+    server.send('private',socketid,[['key'],lodash.uniqueId('value')])
+    server.stream('private',socketid,[['key'],lodash.uniqueId('value')])
+    server.publish('private',socketid,[['key'],lodash.uniqueId('value')])
+    t.end()
 
   })
 

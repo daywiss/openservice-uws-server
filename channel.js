@@ -20,9 +20,13 @@ module.exports = (config, {actions,sessions,app}) => {
     const streams = Stream(config,publish)
 
     async function call(ws,[id,action,args]){
+      //we need to not run the action if we do not detect the 
+      //session existing, same on return data
       return actions(ws.id,channel,action,args).then(result=>{
+        if(!sessions.has(ws.id)) return
         ws.send(encodeResponse(channel,id,result))
       }).catch(err=>{
+        if(!sessions.has(ws.id)) return
         ws.send(encodeError(channel,id,err))
       })
     }
