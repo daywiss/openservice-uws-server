@@ -32,6 +32,7 @@ module.exports = (config, {actions,sessions,app}) => {
     }
 
     function publish(topic,args=[]){
+      // console.log('publish',channel,topic)
       // if(sessions.size <= 0) return
       // assert(sessions.size,'cannot publish when no sockets are connected')
       // sessions.values().next().value.publish(topic,encodeEvent(channel,args))
@@ -39,6 +40,7 @@ module.exports = (config, {actions,sessions,app}) => {
     }
 
     function stream(topic,args=[]){
+      // console.log('stream',channel,topic)
       streams.get(topic).write(args)
     }
 

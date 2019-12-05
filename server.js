@@ -10,7 +10,7 @@ module.exports = async (config,{actions},emit=x=>x) => {
     host='*',
     batchLength=500,
     batchTime=500,
-    maxPayloadLength=32 * 1024 * 1024,
+    maxPayloadLength=128 * 1024 * 1024,
     ...appConfig
   } = config
 
@@ -30,7 +30,7 @@ module.exports = async (config,{actions},emit=x=>x) => {
     open(ws,req){
       ws.id = uid.next()
       sessions.set(ws.id,ws)
-      ws.subscribe(ws.id,ws.id)
+      ws.subscribe(ws.id)
       emit('connect',ws.id)
     },
     message(ws,data,isBinary){
@@ -89,6 +89,7 @@ module.exports = async (config,{actions},emit=x=>x) => {
   }
 
   function stream(channel,topic,args){
+    // console.log('stream',channel,topic)
     assert(channels.has(channel),'No channel: ' + channel)
     return channels.get(channel).stream(topic,args)
   }
