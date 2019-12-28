@@ -38,7 +38,6 @@ test('server',t=>{
     client = await Client(
       WS,
       { host:`ws://localhost:${port}`,...config},
-      {},
       (...args)=>events.emit(...args)
     )
 
@@ -46,77 +45,80 @@ test('server',t=>{
     t.end()
   })
   t.test('call',async t=>{
-    const result = await client.public.call('action','argument')
+    const result = await client.actions.public('action','argument')
     socketid = result.session
     console.log(result)
     t.ok(result)
     t.end()
   })
   t.test('publish',async t=>{
-    events.once('change',(channel,data)=>{
-      // console.log(channel,data)
-      t.equal(data.some.path,'test')
+    events.once('change',(data)=>{
+      t.equal(data.public.some.path,'test')
       t.end()
     })
-    server.publish('public',socketid,[[['some','path'],'test']])
+    server.publish('public',socketid,[['some','path'],'test'])
   })
   t.test('stream',async t=>{
     t.plan(10)
-    events.once('change',(channel,data)=>{
+    events.once('change',(data)=>{
       // console.log(data)
-      Object.entries(data).forEach(([key,value],i)=>{
+      Object.entries(data.private).forEach(([key,value],i)=>{
         t.equal(value,'test_' + i)
       })
       // console.log('stream',channel,data)
       // t.end()
     })
     lodash.times(10,i=>{
-      server.stream('private',socketid,[[i],'test_' + i])
+      server.publish('private',socketid,[[i],'test_' + i])
     })
   })  
   t.test('public stream',async t=>{
-    const result = await client.private.call('action','argument')
-    events.once('change',(channel,data)=>{
+    const result = await client.actions.private('action','argument')
+    events.once('change',(data)=>{
       // console.log(channel,data)
       t.ok(data)
       t.end()
     })
     lodash.times(10,i=>{
-      server.stream('public',result.session,[[i],'test_' + i])
+      server.send('public',result.session,[[i],'test_' + i])
     })
   })  
   t.test('public subscribe',async t=>{
-    server.subscribe('public',socketid,'test')
+    server.subscribe('test',socketid)
     t.end()
   })
   t.test('public publish',async t=>{
-    events.once('change',(channel,data)=>{
-      t.equal(data.some.path,'ok')
+    events.once('change',(data)=>{
+      t.equal(data.public.some.path,'ok')
       t.end()
     })
-    server.publish('public','test',[[['some','path'],'ok']])
+    server.publish('public','test',[['some','path'],'ok'])
   })
   t.test('stream 1',async t=>{
-    events.once('change',(channel,data)=>{
-      console.log(channel,data)
+    events.once('change',(data)=>{
+      console.log(data)
       t.end()
     })
-    await server.subscribe('admin',socketid,'someuser')
-    server.stream('admin','someuser',[['test'],'test'])
+    await server.subscribe('someuser',socketid)
+    server.publish('admin','someuser',[['test'],'test'])
 
   })
   t.test('stream and disconnect',async t=>{
-    client.public.call('slow').then(x=>{
+    client.actions.public('slow').then(x=>{
       t.ok(x)
+      t.end()
     })
-    client.getWs().close()
+    client.close()
     // await new Promise(res=>setTimeout(res,100))
 
     server.send('private',socketid,[['key'],lodash.uniqueId('value')])
-    server.stream('private',socketid,[['key'],lodash.uniqueId('value')])
+    // server.stream('private',socketid,[['key'],lodash.uniqueId('value')])
     server.publish('private',socketid,[['key'],lodash.uniqueId('value')])
-    t.end()
 
+  })
+  t.test('close',t=>{
+    server.close()
+    t.end()
   })
 
 })

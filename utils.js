@@ -7,15 +7,13 @@ exports.encode = function encode(data){
 }
 
 exports.encodeError = function encodeError(channel,id,err){
-  return exports.encode([channel,id,[err.message,err.stack]])
+  return [channel,id,null,[err.message,err.stack]]
 }
 
 exports.encodeResponse = function encodeResponse(channel,id,result){
-  return exports.encode([channel,id,null,result])
+  return [channel,id,result]
 }
 
 exports.encodeEvent = function encodeEvent(channel,data){
-  return exports.encode([channel,null,null,data])
+  return [channel,null,data]
 }
-
-
